@@ -54,23 +54,26 @@ Grammar
 
 Rule 0     S' -> program
 Rule 1     program -> PROGRAM ID SEMICOLON declaration_list
-Rule 2     declaration_list -> declaration_list declaration
-Rule 3     declaration_list -> declaration
-Rule 4     declaration -> header_declaration
-Rule 5     declaration -> fun_declaration
-Rule 6     header_declaration -> USES ID SEMICOLON
-Rule 7     fun_declaration -> FUNCTION ID LPAREN params RPAREN
-Rule 8     params -> params_list
-Rule 9     params_list -> param SEMICOLON params_list
-Rule 10    params_list -> param
-Rule 11    param -> id_list COLON identifiers
-Rule 12    id_list -> id_list COMMA ID
-Rule 13    id_list -> ID
-Rule 14    identifiers -> INTEGER
-Rule 15    identifiers -> FLOAT
-Rule 16    identifiers -> BOOLEAN
-Rule 17    identifiers -> CHAR
-Rule 18    empty -> <empty>
+Rule 2     program -> PROGRAM ID LPAREN argm_list RPAREN SEMICOLON declaration_list
+Rule 3     argm_list -> ID COMMA argm_list
+Rule 4     argm_list -> ID
+Rule 5     declaration_list -> declaration_list declaration
+Rule 6     declaration_list -> declaration
+Rule 7     declaration -> header_declaration
+Rule 8     declaration -> fun_declaration
+Rule 9     header_declaration -> USES ID SEMICOLON
+Rule 10    fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON
+Rule 11    params -> params_list
+Rule 12    params_list -> param SEMICOLON params_list
+Rule 13    params_list -> param
+Rule 14    param -> id_list COLON identifiers
+Rule 15    id_list -> id_list COMMA ID
+Rule 16    id_list -> ID
+Rule 17    identifiers -> INTEGER
+Rule 18    identifiers -> FLOAT
+Rule 19    identifiers -> BOOLEAN
+Rule 20    identifiers -> CHAR
+Rule 21    empty -> <empty>
 
 Terminals, with rules where they appear
 
@@ -78,12 +81,12 @@ AND                  :
 ARRAY                : 
 ASSERT               : 
 BEGIN                : 
-BOOLEAN              : 16
+BOOLEAN              : 19
 CASE                 : 
-CHAR                 : 17
-COLON                : 11
+CHAR                 : 20
+COLON                : 10 14
 COMILLA              : 
-COMMA                : 12
+COMMA                : 3 15
 COMMENT              : 
 COMMENT_LINE         : 
 DEQUAL               : 
@@ -94,20 +97,20 @@ DOT                  :
 ELSE                 : 
 END                  : 
 EQUAL                : 
-FLOAT                : 15
+FLOAT                : 18
 FOR                  : 
-FUNCTION             : 7
+FUNCTION             : 10
 GREATER              : 
 GREATEREQUAL         : 
-ID                   : 1 6 7 12 13
+ID                   : 1 2 3 4 9 10 15 16
 IF                   : 
-INTEGER              : 14
+INTEGER              : 17
 ISEQUAL              : 
 LBLOCK               : 
 LBRACKET             : 
 LESS                 : 
 LESSEQUAL            : 
-LPAREN               : 7
+LPAREN               : 2 10
 MINUS                : 
 MINUSMINUS           : 
 NOT                  : 
@@ -118,18 +121,18 @@ PLUS                 :
 PLUSPLUS             : 
 POWER                : 
 PROCEDURE            : 
-PROGRAM              : 1
+PROGRAM              : 1 2
 QUOTE                : 
 RBLOCK               : 
 RBRACKET             : 
 READ                 : 
 READLN               : 
-RPAREN               : 7
-SEMICOLON            : 1 6 9
+RPAREN               : 2 10
+SEMICOLON            : 1 2 9 10 12
 TEXT                 : 
 THEN                 : 
 TIMES                : 
-USES                 : 6
+USES                 : 9
 VAR                  : 
 WHILE                : 
 WRITE                : 
@@ -138,16 +141,17 @@ error                :
 
 Nonterminals, with rules where they appear
 
-declaration          : 2 3
-declaration_list     : 1 2
+argm_list            : 2 3
+declaration          : 5 6
+declaration_list     : 1 2 5
 empty                : 
-fun_declaration      : 5
-header_declaration   : 4
-id_list              : 11 12
-identifiers          : 11
-param                : 9 10
-params               : 7
-params_list          : 8 9
+fun_declaration      : 8
+header_declaration   : 7
+id_list              : 14 15
+identifiers          : 10 14
+param                : 12 13
+params               : 10
+params_list          : 11 12
 program              : 0
 
 Parsing method: LALR
@@ -156,6 +160,7 @@ state 0
 
     (0) S' -> . program
     (1) program -> . PROGRAM ID SEMICOLON declaration_list
+    (2) program -> . PROGRAM ID LPAREN argm_list RPAREN SEMICOLON declaration_list
 
     PROGRAM         shift and go to state 2
 
@@ -170,6 +175,7 @@ state 1
 state 2
 
     (1) program -> PROGRAM . ID SEMICOLON declaration_list
+    (2) program -> PROGRAM . ID LPAREN argm_list RPAREN SEMICOLON declaration_list
 
     ID              shift and go to state 3
 
@@ -177,272 +183,388 @@ state 2
 state 3
 
     (1) program -> PROGRAM ID . SEMICOLON declaration_list
+    (2) program -> PROGRAM ID . LPAREN argm_list RPAREN SEMICOLON declaration_list
 
     SEMICOLON       shift and go to state 4
+    LPAREN          shift and go to state 5
 
 
 state 4
 
     (1) program -> PROGRAM ID SEMICOLON . declaration_list
-    (2) declaration_list -> . declaration_list declaration
-    (3) declaration_list -> . declaration
-    (4) declaration -> . header_declaration
-    (5) declaration -> . fun_declaration
-    (6) header_declaration -> . USES ID SEMICOLON
-    (7) fun_declaration -> . FUNCTION ID LPAREN params RPAREN
+    (5) declaration_list -> . declaration_list declaration
+    (6) declaration_list -> . declaration
+    (7) declaration -> . header_declaration
+    (8) declaration -> . fun_declaration
+    (9) header_declaration -> . USES ID SEMICOLON
+    (10) fun_declaration -> . FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON
 
-    USES            shift and go to state 9
-    FUNCTION        shift and go to state 10
+    USES            shift and go to state 10
+    FUNCTION        shift and go to state 11
 
-    declaration_list               shift and go to state 5
-    declaration                    shift and go to state 6
-    header_declaration             shift and go to state 7
-    fun_declaration                shift and go to state 8
+    declaration_list               shift and go to state 6
+    declaration                    shift and go to state 7
+    header_declaration             shift and go to state 8
+    fun_declaration                shift and go to state 9
 
 state 5
 
-    (1) program -> PROGRAM ID SEMICOLON declaration_list .
-    (2) declaration_list -> declaration_list . declaration
-    (4) declaration -> . header_declaration
-    (5) declaration -> . fun_declaration
-    (6) header_declaration -> . USES ID SEMICOLON
-    (7) fun_declaration -> . FUNCTION ID LPAREN params RPAREN
+    (2) program -> PROGRAM ID LPAREN . argm_list RPAREN SEMICOLON declaration_list
+    (3) argm_list -> . ID COMMA argm_list
+    (4) argm_list -> . ID
 
-    $end            reduce using rule 1 (program -> PROGRAM ID SEMICOLON declaration_list .)
-    USES            shift and go to state 9
-    FUNCTION        shift and go to state 10
+    ID              shift and go to state 12
 
-    declaration                    shift and go to state 11
-    header_declaration             shift and go to state 7
-    fun_declaration                shift and go to state 8
+    argm_list                      shift and go to state 13
 
 state 6
 
-    (3) declaration_list -> declaration .
+    (1) program -> PROGRAM ID SEMICOLON declaration_list .
+    (5) declaration_list -> declaration_list . declaration
+    (7) declaration -> . header_declaration
+    (8) declaration -> . fun_declaration
+    (9) header_declaration -> . USES ID SEMICOLON
+    (10) fun_declaration -> . FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON
 
-    USES            reduce using rule 3 (declaration_list -> declaration .)
-    FUNCTION        reduce using rule 3 (declaration_list -> declaration .)
-    $end            reduce using rule 3 (declaration_list -> declaration .)
+    $end            reduce using rule 1 (program -> PROGRAM ID SEMICOLON declaration_list .)
+    USES            shift and go to state 10
+    FUNCTION        shift and go to state 11
 
+    declaration                    shift and go to state 14
+    header_declaration             shift and go to state 8
+    fun_declaration                shift and go to state 9
 
 state 7
 
-    (4) declaration -> header_declaration .
+    (6) declaration_list -> declaration .
 
-    USES            reduce using rule 4 (declaration -> header_declaration .)
-    FUNCTION        reduce using rule 4 (declaration -> header_declaration .)
-    $end            reduce using rule 4 (declaration -> header_declaration .)
+    USES            reduce using rule 6 (declaration_list -> declaration .)
+    FUNCTION        reduce using rule 6 (declaration_list -> declaration .)
+    $end            reduce using rule 6 (declaration_list -> declaration .)
 
 
 state 8
 
-    (5) declaration -> fun_declaration .
+    (7) declaration -> header_declaration .
 
-    USES            reduce using rule 5 (declaration -> fun_declaration .)
-    FUNCTION        reduce using rule 5 (declaration -> fun_declaration .)
-    $end            reduce using rule 5 (declaration -> fun_declaration .)
+    USES            reduce using rule 7 (declaration -> header_declaration .)
+    FUNCTION        reduce using rule 7 (declaration -> header_declaration .)
+    $end            reduce using rule 7 (declaration -> header_declaration .)
 
 
 state 9
 
-    (6) header_declaration -> USES . ID SEMICOLON
+    (8) declaration -> fun_declaration .
 
-    ID              shift and go to state 12
+    USES            reduce using rule 8 (declaration -> fun_declaration .)
+    FUNCTION        reduce using rule 8 (declaration -> fun_declaration .)
+    $end            reduce using rule 8 (declaration -> fun_declaration .)
 
 
 state 10
 
-    (7) fun_declaration -> FUNCTION . ID LPAREN params RPAREN
+    (9) header_declaration -> USES . ID SEMICOLON
 
-    ID              shift and go to state 13
+    ID              shift and go to state 15
 
 
 state 11
 
-    (2) declaration_list -> declaration_list declaration .
+    (10) fun_declaration -> FUNCTION . ID LPAREN params RPAREN COLON identifiers SEMICOLON
 
-    USES            reduce using rule 2 (declaration_list -> declaration_list declaration .)
-    FUNCTION        reduce using rule 2 (declaration_list -> declaration_list declaration .)
-    $end            reduce using rule 2 (declaration_list -> declaration_list declaration .)
+    ID              shift and go to state 16
 
 
 state 12
 
-    (6) header_declaration -> USES ID . SEMICOLON
+    (3) argm_list -> ID . COMMA argm_list
+    (4) argm_list -> ID .
 
-    SEMICOLON       shift and go to state 14
+    COMMA           shift and go to state 17
+    RPAREN          reduce using rule 4 (argm_list -> ID .)
 
 
 state 13
 
-    (7) fun_declaration -> FUNCTION ID . LPAREN params RPAREN
+    (2) program -> PROGRAM ID LPAREN argm_list . RPAREN SEMICOLON declaration_list
 
-    LPAREN          shift and go to state 15
+    RPAREN          shift and go to state 18
 
 
 state 14
 
-    (6) header_declaration -> USES ID SEMICOLON .
+    (5) declaration_list -> declaration_list declaration .
 
-    USES            reduce using rule 6 (header_declaration -> USES ID SEMICOLON .)
-    FUNCTION        reduce using rule 6 (header_declaration -> USES ID SEMICOLON .)
-    $end            reduce using rule 6 (header_declaration -> USES ID SEMICOLON .)
+    USES            reduce using rule 5 (declaration_list -> declaration_list declaration .)
+    FUNCTION        reduce using rule 5 (declaration_list -> declaration_list declaration .)
+    $end            reduce using rule 5 (declaration_list -> declaration_list declaration .)
 
 
 state 15
 
-    (7) fun_declaration -> FUNCTION ID LPAREN . params RPAREN
-    (8) params -> . params_list
-    (9) params_list -> . param SEMICOLON params_list
-    (10) params_list -> . param
-    (11) param -> . id_list COLON identifiers
-    (12) id_list -> . id_list COMMA ID
-    (13) id_list -> . ID
+    (9) header_declaration -> USES ID . SEMICOLON
 
-    ID              shift and go to state 16
+    SEMICOLON       shift and go to state 19
 
-    params                         shift and go to state 17
-    params_list                    shift and go to state 18
-    param                          shift and go to state 19
-    id_list                        shift and go to state 20
 
 state 16
 
-    (13) id_list -> ID .
+    (10) fun_declaration -> FUNCTION ID . LPAREN params RPAREN COLON identifiers SEMICOLON
 
-    COLON           reduce using rule 13 (id_list -> ID .)
-    COMMA           reduce using rule 13 (id_list -> ID .)
+    LPAREN          shift and go to state 20
 
 
 state 17
 
-    (7) fun_declaration -> FUNCTION ID LPAREN params . RPAREN
+    (3) argm_list -> ID COMMA . argm_list
+    (3) argm_list -> . ID COMMA argm_list
+    (4) argm_list -> . ID
 
-    RPAREN          shift and go to state 21
+    ID              shift and go to state 12
 
+    argm_list                      shift and go to state 21
 
 state 18
 
-    (8) params -> params_list .
+    (2) program -> PROGRAM ID LPAREN argm_list RPAREN . SEMICOLON declaration_list
 
-    RPAREN          reduce using rule 8 (params -> params_list .)
+    SEMICOLON       shift and go to state 22
 
 
 state 19
 
-    (9) params_list -> param . SEMICOLON params_list
-    (10) params_list -> param .
+    (9) header_declaration -> USES ID SEMICOLON .
 
-    SEMICOLON       shift and go to state 22
-    RPAREN          reduce using rule 10 (params_list -> param .)
+    USES            reduce using rule 9 (header_declaration -> USES ID SEMICOLON .)
+    FUNCTION        reduce using rule 9 (header_declaration -> USES ID SEMICOLON .)
+    $end            reduce using rule 9 (header_declaration -> USES ID SEMICOLON .)
 
 
 state 20
 
-    (11) param -> id_list . COLON identifiers
-    (12) id_list -> id_list . COMMA ID
+    (10) fun_declaration -> FUNCTION ID LPAREN . params RPAREN COLON identifiers SEMICOLON
+    (11) params -> . params_list
+    (12) params_list -> . param SEMICOLON params_list
+    (13) params_list -> . param
+    (14) param -> . id_list COLON identifiers
+    (15) id_list -> . id_list COMMA ID
+    (16) id_list -> . ID
 
-    COLON           shift and go to state 23
-    COMMA           shift and go to state 24
+    ID              shift and go to state 23
 
+    params                         shift and go to state 24
+    params_list                    shift and go to state 25
+    param                          shift and go to state 26
+    id_list                        shift and go to state 27
 
 state 21
 
-    (7) fun_declaration -> FUNCTION ID LPAREN params RPAREN .
+    (3) argm_list -> ID COMMA argm_list .
 
-    USES            reduce using rule 7 (fun_declaration -> FUNCTION ID LPAREN params RPAREN .)
-    FUNCTION        reduce using rule 7 (fun_declaration -> FUNCTION ID LPAREN params RPAREN .)
-    $end            reduce using rule 7 (fun_declaration -> FUNCTION ID LPAREN params RPAREN .)
+    RPAREN          reduce using rule 3 (argm_list -> ID COMMA argm_list .)
 
 
 state 22
 
-    (9) params_list -> param SEMICOLON . params_list
-    (9) params_list -> . param SEMICOLON params_list
-    (10) params_list -> . param
-    (11) param -> . id_list COLON identifiers
-    (12) id_list -> . id_list COMMA ID
-    (13) id_list -> . ID
+    (2) program -> PROGRAM ID LPAREN argm_list RPAREN SEMICOLON . declaration_list
+    (5) declaration_list -> . declaration_list declaration
+    (6) declaration_list -> . declaration
+    (7) declaration -> . header_declaration
+    (8) declaration -> . fun_declaration
+    (9) header_declaration -> . USES ID SEMICOLON
+    (10) fun_declaration -> . FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON
 
-    ID              shift and go to state 16
+    USES            shift and go to state 10
+    FUNCTION        shift and go to state 11
 
-    param                          shift and go to state 19
-    params_list                    shift and go to state 25
-    id_list                        shift and go to state 20
+    declaration_list               shift and go to state 28
+    declaration                    shift and go to state 7
+    header_declaration             shift and go to state 8
+    fun_declaration                shift and go to state 9
 
 state 23
 
-    (11) param -> id_list COLON . identifiers
-    (14) identifiers -> . INTEGER
-    (15) identifiers -> . FLOAT
-    (16) identifiers -> . BOOLEAN
-    (17) identifiers -> . CHAR
+    (16) id_list -> ID .
 
-    INTEGER         shift and go to state 27
-    FLOAT           shift and go to state 28
-    BOOLEAN         shift and go to state 29
-    CHAR            shift and go to state 30
+    COLON           reduce using rule 16 (id_list -> ID .)
+    COMMA           reduce using rule 16 (id_list -> ID .)
 
-    identifiers                    shift and go to state 26
 
 state 24
 
-    (12) id_list -> id_list COMMA . ID
+    (10) fun_declaration -> FUNCTION ID LPAREN params . RPAREN COLON identifiers SEMICOLON
 
-    ID              shift and go to state 31
+    RPAREN          shift and go to state 29
 
 
 state 25
 
-    (9) params_list -> param SEMICOLON params_list .
+    (11) params -> params_list .
 
-    RPAREN          reduce using rule 9 (params_list -> param SEMICOLON params_list .)
+    RPAREN          reduce using rule 11 (params -> params_list .)
 
 
 state 26
 
-    (11) param -> id_list COLON identifiers .
+    (12) params_list -> param . SEMICOLON params_list
+    (13) params_list -> param .
 
-    SEMICOLON       reduce using rule 11 (param -> id_list COLON identifiers .)
-    RPAREN          reduce using rule 11 (param -> id_list COLON identifiers .)
+    SEMICOLON       shift and go to state 30
+    RPAREN          reduce using rule 13 (params_list -> param .)
 
 
 state 27
 
-    (14) identifiers -> INTEGER .
+    (14) param -> id_list . COLON identifiers
+    (15) id_list -> id_list . COMMA ID
 
-    SEMICOLON       reduce using rule 14 (identifiers -> INTEGER .)
-    RPAREN          reduce using rule 14 (identifiers -> INTEGER .)
+    COLON           shift and go to state 31
+    COMMA           shift and go to state 32
 
 
 state 28
 
-    (15) identifiers -> FLOAT .
+    (2) program -> PROGRAM ID LPAREN argm_list RPAREN SEMICOLON declaration_list .
+    (5) declaration_list -> declaration_list . declaration
+    (7) declaration -> . header_declaration
+    (8) declaration -> . fun_declaration
+    (9) header_declaration -> . USES ID SEMICOLON
+    (10) fun_declaration -> . FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON
 
-    SEMICOLON       reduce using rule 15 (identifiers -> FLOAT .)
-    RPAREN          reduce using rule 15 (identifiers -> FLOAT .)
+    $end            reduce using rule 2 (program -> PROGRAM ID LPAREN argm_list RPAREN SEMICOLON declaration_list .)
+    USES            shift and go to state 10
+    FUNCTION        shift and go to state 11
 
+    declaration                    shift and go to state 14
+    header_declaration             shift and go to state 8
+    fun_declaration                shift and go to state 9
 
 state 29
 
-    (16) identifiers -> BOOLEAN .
+    (10) fun_declaration -> FUNCTION ID LPAREN params RPAREN . COLON identifiers SEMICOLON
 
-    SEMICOLON       reduce using rule 16 (identifiers -> BOOLEAN .)
-    RPAREN          reduce using rule 16 (identifiers -> BOOLEAN .)
+    COLON           shift and go to state 33
 
 
 state 30
 
-    (17) identifiers -> CHAR .
+    (12) params_list -> param SEMICOLON . params_list
+    (12) params_list -> . param SEMICOLON params_list
+    (13) params_list -> . param
+    (14) param -> . id_list COLON identifiers
+    (15) id_list -> . id_list COMMA ID
+    (16) id_list -> . ID
 
-    SEMICOLON       reduce using rule 17 (identifiers -> CHAR .)
-    RPAREN          reduce using rule 17 (identifiers -> CHAR .)
+    ID              shift and go to state 23
 
+    param                          shift and go to state 26
+    params_list                    shift and go to state 34
+    id_list                        shift and go to state 27
 
 state 31
 
-    (12) id_list -> id_list COMMA ID .
+    (14) param -> id_list COLON . identifiers
+    (17) identifiers -> . INTEGER
+    (18) identifiers -> . FLOAT
+    (19) identifiers -> . BOOLEAN
+    (20) identifiers -> . CHAR
 
-    COLON           reduce using rule 12 (id_list -> id_list COMMA ID .)
-    COMMA           reduce using rule 12 (id_list -> id_list COMMA ID .)
+    INTEGER         shift and go to state 36
+    FLOAT           shift and go to state 37
+    BOOLEAN         shift and go to state 38
+    CHAR            shift and go to state 39
+
+    identifiers                    shift and go to state 35
+
+state 32
+
+    (15) id_list -> id_list COMMA . ID
+
+    ID              shift and go to state 40
+
+
+state 33
+
+    (10) fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON . identifiers SEMICOLON
+    (17) identifiers -> . INTEGER
+    (18) identifiers -> . FLOAT
+    (19) identifiers -> . BOOLEAN
+    (20) identifiers -> . CHAR
+
+    INTEGER         shift and go to state 36
+    FLOAT           shift and go to state 37
+    BOOLEAN         shift and go to state 38
+    CHAR            shift and go to state 39
+
+    identifiers                    shift and go to state 41
+
+state 34
+
+    (12) params_list -> param SEMICOLON params_list .
+
+    RPAREN          reduce using rule 12 (params_list -> param SEMICOLON params_list .)
+
+
+state 35
+
+    (14) param -> id_list COLON identifiers .
+
+    SEMICOLON       reduce using rule 14 (param -> id_list COLON identifiers .)
+    RPAREN          reduce using rule 14 (param -> id_list COLON identifiers .)
+
+
+state 36
+
+    (17) identifiers -> INTEGER .
+
+    SEMICOLON       reduce using rule 17 (identifiers -> INTEGER .)
+    RPAREN          reduce using rule 17 (identifiers -> INTEGER .)
+
+
+state 37
+
+    (18) identifiers -> FLOAT .
+
+    SEMICOLON       reduce using rule 18 (identifiers -> FLOAT .)
+    RPAREN          reduce using rule 18 (identifiers -> FLOAT .)
+
+
+state 38
+
+    (19) identifiers -> BOOLEAN .
+
+    SEMICOLON       reduce using rule 19 (identifiers -> BOOLEAN .)
+    RPAREN          reduce using rule 19 (identifiers -> BOOLEAN .)
+
+
+state 39
+
+    (20) identifiers -> CHAR .
+
+    SEMICOLON       reduce using rule 20 (identifiers -> CHAR .)
+    RPAREN          reduce using rule 20 (identifiers -> CHAR .)
+
+
+state 40
+
+    (15) id_list -> id_list COMMA ID .
+
+    COLON           reduce using rule 15 (id_list -> id_list COMMA ID .)
+    COMMA           reduce using rule 15 (id_list -> id_list COMMA ID .)
+
+
+state 41
+
+    (10) fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON identifiers . SEMICOLON
+
+    SEMICOLON       shift and go to state 42
+
+
+state 42
+
+    (10) fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON .
+
+    USES            reduce using rule 10 (fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON .)
+    FUNCTION        reduce using rule 10 (fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON .)
+    $end            reduce using rule 10 (fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON .)
 

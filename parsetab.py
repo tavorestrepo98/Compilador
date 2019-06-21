@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ARRAY ASSERT BEGIN BOOLEAN CASE CHAR COLON COMILLA COMMA COMMENT COMMENT_LINE DEQUAL DIV DIVIDE DO DOT ELSE END EQUAL FLOAT FOR FUNCTION GREATER GREATEREQUAL ID IF INTEGER ISEQUAL LBLOCK LBRACKET LESS LESSEQUAL LPAREN MINUS MINUSMINUS NOT NUMBER OF OR PLUS PLUSPLUS POWER PROCEDURE PROGRAM QUOTE RBLOCK RBRACKET READ READLN RPAREN SEMICOLON TEXT THEN TIMES USES VAR WHILE WRITE WRITELNprogram : PROGRAM ID SEMICOLON declaration_listdeclaration_list : declaration_list  declarationdeclaration_list : declarationdeclaration : header_declaration \n    | fun_declarationheader_declaration : USES ID SEMICOLONfun_declaration : FUNCTION ID LPAREN params RPARENparams : params_listparams_list : param SEMICOLON params_listparams_list : paramparam : id_list COLON identifiersid_list : id_list COMMA IDid_list : IDidentifiers : INTEGERidentifiers : FLOATidentifiers : BOOLEANidentifiers : CHARempty :'
+_lr_signature = 'AND ARRAY ASSERT BEGIN BOOLEAN CASE CHAR COLON COMILLA COMMA COMMENT COMMENT_LINE DEQUAL DIV DIVIDE DO DOT ELSE END EQUAL FLOAT FOR FUNCTION GREATER GREATEREQUAL ID IF INTEGER ISEQUAL LBLOCK LBRACKET LESS LESSEQUAL LPAREN MINUS MINUSMINUS NOT NUMBER OF OR PLUS PLUSPLUS POWER PROCEDURE PROGRAM QUOTE RBLOCK RBRACKET READ READLN RPAREN SEMICOLON TEXT THEN TIMES USES VAR WHILE WRITE WRITELNprogram : PROGRAM ID SEMICOLON declaration_list\n\t| PROGRAM ID LPAREN argm_list RPAREN SEMICOLON declaration_list argm_list : ID COMMA argm_list\n\t| IDdeclaration_list : declaration_list  declarationdeclaration_list : declarationdeclaration : header_declaration \n    | fun_declarationheader_declaration : USES ID SEMICOLONfun_declaration : FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLONparams : params_listparams_list : param SEMICOLON params_listparams_list : paramparam : id_list COLON identifiersid_list : id_list COMMA IDid_list : IDidentifiers : INTEGERidentifiers : FLOATidentifiers : BOOLEANidentifiers : CHARempty :'
     
-_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,5,6,7,8,11,14,21,],[0,-1,-3,-4,-5,-2,-6,-7,]),'ID':([2,9,10,15,22,24,],[3,12,13,16,16,31,]),'SEMICOLON':([3,12,19,26,27,28,29,30,],[4,14,22,-11,-14,-15,-16,-17,]),'USES':([4,5,6,7,8,11,14,21,],[9,9,-3,-4,-5,-2,-6,-7,]),'FUNCTION':([4,5,6,7,8,11,14,21,],[10,10,-3,-4,-5,-2,-6,-7,]),'LPAREN':([13,],[15,]),'COLON':([16,20,31,],[-13,23,-12,]),'COMMA':([16,20,31,],[-13,24,-12,]),'RPAREN':([17,18,19,25,26,27,28,29,30,],[21,-8,-10,-9,-11,-14,-15,-16,-17,]),'INTEGER':([23,],[27,]),'FLOAT':([23,],[28,]),'BOOLEAN':([23,],[29,]),'CHAR':([23,],[30,]),}
+_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,6,7,8,9,14,19,28,42,],[0,-1,-6,-7,-8,-5,-9,-2,-10,]),'ID':([2,5,10,11,17,20,30,32,],[3,12,15,16,12,23,23,40,]),'SEMICOLON':([3,15,18,26,35,36,37,38,39,41,],[4,19,22,30,-14,-17,-18,-19,-20,42,]),'LPAREN':([3,16,],[5,20,]),'USES':([4,6,7,8,9,14,19,22,28,42,],[10,10,-6,-7,-8,-5,-9,10,10,-10,]),'FUNCTION':([4,6,7,8,9,14,19,22,28,42,],[11,11,-6,-7,-8,-5,-9,11,11,-10,]),'COMMA':([12,23,27,40,],[17,-16,32,-15,]),'RPAREN':([12,13,21,24,25,26,34,35,36,37,38,39,],[-4,18,-3,29,-11,-13,-12,-14,-17,-18,-19,-20,]),'COLON':([23,27,29,40,],[-16,31,33,-15,]),'INTEGER':([31,33,],[36,36,]),'FLOAT':([31,33,],[37,37,]),'BOOLEAN':([31,33,],[38,38,]),'CHAR':([31,33,],[39,39,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'declaration_list':([4,],[5,]),'declaration':([4,5,],[6,11,]),'header_declaration':([4,5,],[7,7,]),'fun_declaration':([4,5,],[8,8,]),'params':([15,],[17,]),'params_list':([15,22,],[18,25,]),'param':([15,22,],[19,19,]),'id_list':([15,22,],[20,20,]),'identifiers':([23,],[26,]),}
+_lr_goto_items = {'program':([0,],[1,]),'declaration_list':([4,22,],[6,28,]),'declaration':([4,6,22,28,],[7,14,7,14,]),'header_declaration':([4,6,22,28,],[8,8,8,8,]),'fun_declaration':([4,6,22,28,],[9,9,9,9,]),'argm_list':([5,17,],[13,21,]),'params':([20,],[24,]),'params_list':([20,30,],[25,34,]),'param':([20,30,],[26,26,]),'id_list':([20,30,],[27,27,]),'identifiers':([31,33,],[35,41,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -28,21 +28,24 @@ del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
   ('program -> PROGRAM ID SEMICOLON declaration_list','program',4,'p_program','minipascal_parse.py',9),
-  ('declaration_list -> declaration_list declaration','declaration_list',2,'p_declaration_list_1','minipascal_parse.py',13),
-  ('declaration_list -> declaration','declaration_list',1,'p_declaration_list_2','minipascal_parse.py',17),
-  ('declaration -> header_declaration','declaration',1,'p_declaration','minipascal_parse.py',21),
-  ('declaration -> fun_declaration','declaration',1,'p_declaration','minipascal_parse.py',22),
-  ('header_declaration -> USES ID SEMICOLON','header_declaration',3,'p_header_declaration_1','minipascal_parse.py',26),
-  ('fun_declaration -> FUNCTION ID LPAREN params RPAREN','fun_declaration',5,'p_fun_declaration','minipascal_parse.py',31),
-  ('params -> params_list','params',1,'p_params_1','minipascal_parse.py',35),
-  ('params_list -> param SEMICOLON params_list','params_list',3,'p_params_list_1','minipascal_parse.py',39),
-  ('params_list -> param','params_list',1,'p_params_list_2','minipascal_parse.py',43),
-  ('param -> id_list COLON identifiers','param',3,'p_param_1','minipascal_parse.py',47),
-  ('id_list -> id_list COMMA ID','id_list',3,'p_id_list_1','minipascal_parse.py',51),
-  ('id_list -> ID','id_list',1,'p_id_list_2','minipascal_parse.py',55),
-  ('identifiers -> INTEGER','identifiers',1,'p_identifiers_1','minipascal_parse.py',59),
-  ('identifiers -> FLOAT','identifiers',1,'p_identifiers_2','minipascal_parse.py',63),
-  ('identifiers -> BOOLEAN','identifiers',1,'p_identifiers_3','minipascal_parse.py',67),
-  ('identifiers -> CHAR','identifiers',1,'p_identifiers_4','minipascal_parse.py',71),
-  ('empty -> <empty>','empty',0,'p_empty','minipascal_parse.py',76),
+  ('program -> PROGRAM ID LPAREN argm_list RPAREN SEMICOLON declaration_list','program',7,'p_program','minipascal_parse.py',10),
+  ('argm_list -> ID COMMA argm_list','argm_list',3,'p_argm_list','minipascal_parse.py',14),
+  ('argm_list -> ID','argm_list',1,'p_argm_list','minipascal_parse.py',15),
+  ('declaration_list -> declaration_list declaration','declaration_list',2,'p_declaration_list_1','minipascal_parse.py',19),
+  ('declaration_list -> declaration','declaration_list',1,'p_declaration_list_2','minipascal_parse.py',23),
+  ('declaration -> header_declaration','declaration',1,'p_declaration','minipascal_parse.py',27),
+  ('declaration -> fun_declaration','declaration',1,'p_declaration','minipascal_parse.py',28),
+  ('header_declaration -> USES ID SEMICOLON','header_declaration',3,'p_header_declaration_1','minipascal_parse.py',32),
+  ('fun_declaration -> FUNCTION ID LPAREN params RPAREN COLON identifiers SEMICOLON','fun_declaration',8,'p_fun_declaration','minipascal_parse.py',36),
+  ('params -> params_list','params',1,'p_params_1','minipascal_parse.py',40),
+  ('params_list -> param SEMICOLON params_list','params_list',3,'p_params_list_1','minipascal_parse.py',44),
+  ('params_list -> param','params_list',1,'p_params_list_2','minipascal_parse.py',48),
+  ('param -> id_list COLON identifiers','param',3,'p_param_1','minipascal_parse.py',52),
+  ('id_list -> id_list COMMA ID','id_list',3,'p_id_list_1','minipascal_parse.py',56),
+  ('id_list -> ID','id_list',1,'p_id_list_2','minipascal_parse.py',60),
+  ('identifiers -> INTEGER','identifiers',1,'p_identifiers_1','minipascal_parse.py',64),
+  ('identifiers -> FLOAT','identifiers',1,'p_identifiers_2','minipascal_parse.py',68),
+  ('identifiers -> BOOLEAN','identifiers',1,'p_identifiers_3','minipascal_parse.py',72),
+  ('identifiers -> CHAR','identifiers',1,'p_identifiers_4','minipascal_parse.py',76),
+  ('empty -> <empty>','empty',0,'p_empty','minipascal_parse.py',80),
 ]

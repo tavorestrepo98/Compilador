@@ -1,4 +1,4 @@
-PRoGram Evaluacion;
+PRoGram Evaluacion;     
 uses CRT;
 
 writeln('hola penagos');
